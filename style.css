@@ -1,0 +1,208 @@
+html, body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* Importante para que no salgan barras en el overlay */
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+    /* Semitransparente fijo */
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    padding: 15px;
+    user-select: none;
+    /* Que el texto no sea seleccionable */
+    width: max-content;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.overlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 12px;
+}
+
+#status {
+    font-size: 11px;
+    color: #e0f2fe;
+    font-weight: bold;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+#status.live::before {
+    content: '●';
+    color: red;
+    margin-right: 5px;
+    animation: flash 1.5s infinite;
+}
+
+.match-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+}
+
+.player.left {
+    align-items: flex-start;
+}
+
+.player.right {
+    align-items: flex-end;
+}
+
+.player-block {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 6px;
+}
+
+.player-block:last-child {
+    margin-bottom: 0;
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 140px; /* Espacio mínimo para ELOs 1v1 */
+}
+
+.name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.civ {
+    font-size: 14px;
+    color: #add8e6;
+    margin-bottom: 2px;
+}
+
+.elo {
+    font-size: 12px;
+    color: #ccc;
+    white-space: nowrap;
+}
+
+.vs {
+    font-size: 18px;
+    font-weight: bold;
+    color: red;
+    margin: 0 15px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.invisible {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Reglas para los SVG inyectados dinámicamente */
+.name svg,
+.min-svg svg {
+    height: 1.2em;
+    width: auto;
+    vertical-align: middle;
+}
+
+/* Contenedor del SVG ".min" (Color/Numero) */
+.min-svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+}
+
+@keyframes flash {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* ── Modo arrastre (Tecla Ins) ───────────────────────────────────────────── */
+.drag-mode {
+    border-color: #FFD700 !important;
+    cursor: move !important;
+    box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.6);
+    animation: drag-pulse 1s infinite;
+}
+
+@keyframes drag-pulse {
+    0%   { box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.6); }
+    50%  { box-shadow: 0 0 16px 4px rgba(255, 215, 0, 0.9); }
+    100% { box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.6); }
+}
+
+/* ── Panel de edición de Profile ID ────────────────────────────────────── */
+.edit-panel {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    -webkit-app-region: no-drag;
+}
+
+.edit-panel input {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 4px;
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    width: 90px;
+    outline: none;
+    -webkit-app-region: no-drag;
+}
+
+.edit-panel input:focus {
+    border-color: #FFD700;
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.edit-panel button {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 0 5px;
+    line-height: 1.5;
+    -webkit-app-region: no-drag;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.edit-panel button:hover {
+    background: rgba(255, 215, 0, 0.3);
+    border-color: #FFD700;
+}

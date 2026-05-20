@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>AoE2 Overlay</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="overlay" id="overlay">
+        <div class="overlay-header">
+            <div id="status">Starting Overlay...</div>
+            <div id="edit-panel" class="edit-panel invisible">
+                <input type="text" id="profile-input" placeholder="Profile ID" />
+                <button id="refresh-btn" title="Re-scrape">&#x21bb;</button>
+                <button id="reset-size-btn" title="Reset Size">1:1</button>
+            </div>
+        </div>
+
+        <div id="match-block" class="match-info hidden">
+            <div class="player left" id="p1-container">
+                <!-- Se inyectan los jugadores del equipo 1 -->
+            </div>
+
+            <div class="vs">VS</div>
+
+            <div class="player right" id="p2-container">
+                <!-- Se inyectan los jugadores del equipo 2 -->
+            </div>
+        </div>
+    </div>
+
+
+    <script src="renderer.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Setup - AoE2 Overlay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base:      #111214;
+      --bg-surface:   #1e1f22;
+      --bg-input:     #2b2d31;
+      --border:       rgba(255, 255, 255, 0.06);
+      --accent:       #5865f2;
+      --accent-hover: #4752c4;
+      --text-primary: #dbdee1;
+      --text-muted:   #949ba4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      height: 100vh;
+    }
+    .container {
+      background: var(--bg-surface);
+      border-top: none;
+      padding: 24px 28px 28px;
+      width: 100%;
+      text-align: center;
+      flex: 1;
+    }
+    .titlebar {
+      width: 100%;
+    }
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+    p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0 0 22px 0;
+      line-height: 1.5;
+    }
+    label {
+      display: block;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      margin-bottom: 18px;
+      transition: border-color 0.15s;
+    }
+    input::placeholder { color: #5c6068; }
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.25);
+    }
+    button {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 6px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      letter-spacing: 0.2px;
+    }
+    button:hover  { background: var(--accent-hover); transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+    /* ── Title bar ── */
+    .titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #18191c;
+      padding: 0 12px;
+      height: 36px;
+      border-radius: 16px 16px 0 0;
+      -webkit-app-region: drag;
+      user-select: none;
+    }
+    .titlebar-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.2px;
+    }
+    .titlebar-controls {
+      display: flex;
+      gap: 6px;
+      -webkit-app-region: no-drag;
+    }
+    .wbtn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.12s, color 0.12s;
+      padding: 0;
+    }
+    .wbtn:hover         { background: rgba(255,255,255,0.08); color: var(--text-primary); transform: none; }
+    .wbtn.close:hover   { background: #ed4245; color: #fff; }
+    .wbtn:active        { transform: none; }
+  </style>
+</head>
+<body>
+  <div class="titlebar">
+    <span class="titlebar-title">AoE2 Overlay</span>
+    <div class="titlebar-controls">
+      <button class="wbtn" id="minBtn" title="Minimize">&#8722;</button>
+      <button class="wbtn close" id="closeBtn" title="Close">&#x2715;</button>
+    </div>
+  </div>
+  <div class="container">
+    <h1>AoE2 Overlay</h1>
+    <p>Enter the Profile ID for your AoE2Recs account.</p>
+    <input type="text" id="profileId" placeholder="e.g. 2920057" />
+    <div style="display: flex; gap: 10px; margin-bottom: 24px;">
+      <div style="flex: 1;">
+        <label for="moveHotkey" style="font-size: 10px;">Move Overlay (Hotkey)</label>
+        <input type="text" id="moveHotkey" placeholder="Insert" style="margin-bottom: 0;" />
+      </div>
+      <div style="flex: 1;">
+        <label for="toggleHotkey" style="font-size: 10px;">Toggle Visibility (Hotkey)</label>
+        <input type="text" id="toggleHotkey" placeholder="Home" style="margin-bottom: 0;" />
+      </div>
+    </div>
+    <button id="startBtn">START OVERLAY</button>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+    const startBtn  = document.getElementById('startBtn');
+    const inputId   = document.getElementById('profileId');
+    const minBtn    = document.getElementById('minBtn');
+    const closeBtn  = document.getElementById('closeBtn');
+
+    minBtn.addEventListener('click',   () => ipcRenderer.send('setup-minimize'));
+    closeBtn.addEventListener('click', () => ipcRenderer.send('setup-close'));
+
+    const savedId = localStorage.getItem('aoe2ProfileId');
+    if (savedId) inputId.value = savedId;
+    const moveHotkeyInput = document.getElementById('moveHotkey');
+    const toggleHotkeyInput = document.getElementById('toggleHotkey');
+
+    function bindHotkeyInput(inputEl, storageKey, defaultKey) {
+      let currentValue = localStorage.getItem(storageKey) || defaultKey;
+      if (!/^[a-zA-Z0-9+]+$/.test(currentValue)) {
+         currentValue = defaultKey;
+      }
+      inputEl.value = currentValue;
+      inputEl.readOnly = true;
+      inputEl.style.cursor = 'pointer';
+
+      inputEl.addEventListener('focus', () => {
+        inputEl.value = 'Press a key';
+        inputEl.style.color = 'var(--text-muted)';
+      });
+
+      inputEl.addEventListener('blur', () => {
+        inputEl.value = currentValue;
+        inputEl.style.color = 'var(--text-primary)';
+      });
+
+      inputEl.addEventListener('keydown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (e.key === 'Escape') {
+          inputEl.blur();
+          return;
+        }
+
+        let keyName = e.key;
+        if (keyName === ' ') keyName = 'Space';
+        if (keyName.length === 1) keyName = keyName.toUpperCase();
+
+        // Prevenir crashes de Electron por teclas no ASCII (ej: ¿, +, ´)
+        if (keyName.length === 1 && !/^[A-Z0-9]$/.test(keyName)) {
+            return;
+        }
+
+        // Ignorar si solo presionó un modificador
+        if (['Control', 'Alt', 'Shift', 'Meta'].includes(keyName)) {
+            return;
+        }
+
+        const modifiers = [];
+        if (e.ctrlKey) modifiers.push('CommandOrControl');
+        if (e.altKey) modifiers.push('Alt');
+        if (e.shiftKey) modifiers.push('Shift');
+
+        const accelerator = [...modifiers, keyName].join('+');
+        currentValue = accelerator;
+        inputEl.value = currentValue;
+        inputEl.style.color = 'var(--text-primary)';
+        inputEl.blur();
+      });
+    }
+
+    bindHotkeyInput(moveHotkeyInput, 'aoe2MoveHotkey', 'Insert');
+    bindHotkeyInput(toggleHotkeyInput, 'aoe2ToggleHotkey', 'Home');
+
+    startBtn.addEventListener('click', () => {
+      const pid = inputId.value.trim();
+      const moveHotkey = moveHotkeyInput.value.trim() || 'Insert';
+      const toggleHotkey = toggleHotkeyInput.value.trim() || 'Home';
+      if (pid) {
+        localStorage.setItem('aoe2ProfileId', pid);
+        localStorage.setItem('aoe2MoveHotkey', moveHotkey);
+        localStorage.setItem('aoe2ToggleHotkey', toggleHotkey);
+        ipcRenderer.send('start-overlay', { profileId: pid, moveHotkey, toggleHotkey });
+      } else {
+        alert('Please enter a valid Profile ID.');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "name": "aoe2-simple-overlay",
+  "version": "1.1.0",
+  "description": "Get ELOs from TG and 1v1 matchs.",
+  "main": "main.js",
+  "author": "heber-prog",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.aoe2.overlay",
+    "productName": "AoE2 Simple Overlay",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "AoE2 Simple Overlay"
+    }
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.11.1",
+    "electron": "^29.1.0",
+    "electron-builder": "^26.8.1"
+  }
+}
